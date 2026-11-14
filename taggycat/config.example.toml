@@ -1,0 +1,171 @@
+# =====================================================================
+# 虎猫解说 配置文件（复制为 config.toml 后修改）
+#   cp config.example.toml config.toml
+# 环境变量 TAGGYCAT_CONFIG 可指定配置文件路径
+# 也可在界面菜单「设置 → 接口设置」中修改 LLM/VLM/TTS 接口（保存写回本文件）
+# =====================================================================
+
+# ---------------------------------------------------------------------
+# LLM：剧情分析 / 解说文案生成（云端 OpenAI 兼容为主）
+# ---------------------------------------------------------------------
+[llm]
+provider = "openai_compatible"        # openai_compatible | ollama
+base_url = "https://api.deepseek.com/v1"
+api_key = "sk-REPLACE_ME"
+model = "deepseek-chat"
+temperature = 0.7
+max_tokens = 4096
+timeout = 180
+max_retries = 3
+reasoning_effort = ""   # 推理模型思考控制 none|low|medium|high（none=关思考限长度；空=不传，服务端不支持时自动去掉）
+
+# LLM 本地备选（Ollama）。回退规则：[llm] 的 api_key 为空或含 REPLACE 时自动使用本节
+[llm_local]
+provider = "ollama"
+base_url = "http://127.0.0.1:11434"
+api_key = ""
+model = "qwen3.8-27b"
+temperature = 0.7
+max_tokens = 4096
+timeout = 300
+max_retries = 2
+reasoning_effort = ""   # 同上；本机 qwen3 推理模型建议 "none"（关闭思维链）
+
+# ---------------------------------------------------------------------
+# VLM：抽帧画面理解（台词 + 抽帧双轨中的画面轨）
+#   provider = "openai_compatible" 云端 API（DeepSeek 兼容/qwen-vl 等）
+#   provider = "comfyui"           本地 ComfyUI 视觉理解工作流（见 [vlm.comfyui]）
+# ---------------------------------------------------------------------
+[vlm]
+enabled = true
+provider = "openai_compatible"
+base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+api_key = "sk-REPLACE_ME"
+model = "qwen-vl-max"
+max_frames = 80 # 单任务最多送审帧数（控成本）
+frame_interval = 10.0           # 均匀抽帧间隔（秒），0 = 仅场景切分抽帧
+scene_first = true              # true: 场景切分优先，不足再按间隔补齐
+timeout = 180
+max_retries = 3
+
+# ComfyUI 视觉理解工作流（provider = "comfyui" 时启用）
+[vlm.comfyui]
+base_url = "http://127.0.0.1:8188"
+workflow = "" # 视觉理解工作流（API 格式 JSON），provider=comfyui 时必填
+image_input = "" # 图像输入名（空=自动识别 LoadImage 节点）
+text_input = "" # 提示词输入名（空=自动识别，找不到则用工作流内置）
+timeout = 600
+poll_interval = 1.0
+
+# ---------------------------------------------------------------------
+# ASR：台词轨（faster-whisper 本地 / ComfyUI 转录工作流）
+#   缺 cublas64_12.dll 时本地 CUDA 转录会失败 → 改 engine="comfyui"
+# ---------------------------------------------------------------------
+[asr]
+enabled = true
+engine = "faster_whisper"       # faster_whisper | comfyui | off
+model = "large-v3"              # large-v3 | medium | small ...
+device = "cuda"
+compute_type = "float16"
+language = "zh"
+beam_size = 5
+vad_filter = true
+
+# engine = "comfyui" 时启用：整条音轨交给 ComfyUI 转录工作流
+[asr.comfyui]
+base_url = "http://127.0.0.1:8188"
+workflow = "resources/workflows/asr_workflow.json" # 需为 API 格式（Save (API Format)）
+audio_input = ""                 # 承载音频的输入名，空=自动识别 LoadAudio 节点
+max_upload_mb = 90              # 单次上传上限，超出自动分段转录（ComfyUI 默认 100MB）
+timeout = 1800                   # 整轨转录较慢，超时放宽
+poll_interval = 1.0
+
+# ---------------------------------------------------------------------
+# TTS：三引擎统一接口
+#   edge        在线免费（起步）
+#   comfyui     本地 ComfyUI 工作流 TTS
+#   comfyui_clone 本地 ComfyUI 语音克隆
+# ---------------------------------------------------------------------
+[tts]
+engine = "edge" # edge | comfyui | comfyui_clone
+# 未指定时使用的默认音色/工作流
+default_voice = "zh-CN-YunxiNeural"
+cache = true    # 配音音频缓存（同文案不重复合成）
+sample_rate = 44100
+
+[tts.edge]
+voice = "zh-CN-YunxiNeural"
+rate = "+0%"
+volume = "+0%"
+
+[tts.comfyui]
+base_url = "http://127.0.0.1:8188"
+workflow = "resources/workflows/tts_workflow.json" # 需为 API 格式（Save (API Format)）
+text_input = ""                # 承载文本的输入名，空=自动识别 text/string/prompt
+timeout = 600
+poll_interval = 1.0
+
+[tts.comfyui_clone]
+base_url = "http://127.0.0.1:8188"
+workflow = "resources/workflows/tts_clone_workflow.json"
+text_input = ""                 # 承载文本的输入名，空=自动识别
+reference_audio = "" # 参考音频路径（克隆音色）
+ref_input = ""                  # 承载参考音频的输入名，空=自动识别 audio/ref
+timeout = 600
+poll_interval = 1.0
+
+# ---------------------------------------------------------------------
+# 素材理解与剪辑参数（对应「剪辑配置」面板）
+# ---------------------------------------------------------------------
+[material]
+target_duration = 300           # 目标成片时长（秒），plan 按此出片（±20%），不足自动补选
+material_ratio = 30             # 素材选取比例（%）：素材过剩时候选采样覆盖比例（短素材不生效）
+narration_ratio = 50            # 解说比例（%）【预留：暂未参与规划】
+clip_min_duration = 4.0         # 单片段最短时长（秒）
+clip_max_duration = 12.0        # 单片段最长时长（秒；越短解说与画面对得越紧）
+scene_threshold = 0.30          # ffmpeg 场景切分阈值
+
+[output]
+language = "中文"               # 【预留：提示词当前固定中文】
+style = "电影解说"              # 解说风格（电影/短剧漫剧/悬疑/吐槽/产品/人物/地理/知识/搞笑式/温柔式/盘点式/宣传式/批判式/聊天式/激情式）
+width = 1920
+height = 1080
+fps = 30
+video_codec = "libx264"
+audio_codec = "aac"
+crf = 21
+preset = "medium"
+audio_bitrate = "192k"
+bgm_volume = 0.15               # 背景音乐音量（0-1）
+keep_original_audio = true      # 保留原声（original_audio_mode 为空时生效）
+original_audio_mode = "mute"    # keep=保留原声 | mute=讲解段全静音 | tail=仅段尾保留一小段原声
+original_audio_tail = 1.2       # tail 模式下段尾保留原声的秒数
+original_audio_volume = 0.3     # 原声音量（0-1）
+voice_yield = false             # 原声台词密集的片段：整段保留原声、跳过讲解配音与字幕（该时段不讲解）
+voice_yield_min = 2.0           # 判定阈值（秒）：台词重叠 ≥ max(该值, 片段时长一半) 才让路
+hard_sub_remove = true          # 讲解段用 delogo 遮盖原片烧录字幕（原声让路段保留原字幕）
+hard_sub_band = "0.04,0.96,0.80,1.00"  # 遮盖带 x1,x2,y1,y2（画面宽高占比，可按原片字幕位置调）
+voice_pitch_match = true        # 讲解配音自动对齐原声音高（估计基频差移调配音，时长不变）
+voice_pitch_max_semitones = 3.0 # 移调幅度上限（半音），防原声含音乐时误估过大
+subtitle = true                 # 烧录字幕
+subtitle_font = "resources/fonts/NotoSansSC-Regular.otf"
+subtitle_fontsize = 64
+subtitle_bilingual = false      # 双语字幕：每条下方加一行译文（LLM 翻译，缓存，失败降级单语）
+subtitle_lang2 = "en"           # 副语言：en/ja/ko/fr/de/es…
+
+[review]
+validate_script = true          # 校验文案开关：配音前人工审核（对应图中开关）
+
+[queue]
+max_concurrent = 1              # 【预留：当前始终单任务】右下角「活动中 N」为实时统计
+
+[paths]
+workspace = "workspace"         # 任务断点续跑工作区
+output = "output"               # 成片输出根目录
+fonts = "resources/fonts"       # 【预留：字幕字体见 [output].subtitle_font】
+bgm_dir = "resources/songs"     # 【预留：BGM 由任务配置选择】
+voice_samples = "resources/voices"   # 音色试听样本缓存
+tts_cache = "workspace/tts_cache"    # 配音音频缓存（按文本哈希）
+
+[ui]
+theme = "light"         # 界面主题：light | light-green | light-purple | dark | dark-amber（菜单「设置→主题」实时切换）

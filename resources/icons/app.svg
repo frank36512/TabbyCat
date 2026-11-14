@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- MD 扁平：纯色底板，无渐变无阴影 -->
+  <rect x="8" y="8" width="240" height="240" rx="54" fill="#1A73E8"/>
+
+  <!-- 播放圆片 -->
+  <circle cx="128" cy="128" r="78" fill="#FFFFFF"/>
+
+  <!-- 声波（解说）：圆内左侧，蓝色短柱 -->
+  <g fill="#1A73E8">
+    <rect x="70"  y="116" width="10" height="24" rx="5" opacity="0.55"/>
+    <rect x="86"  y="104" width="10" height="48" rx="5" opacity="0.8"/>
+    <rect x="102" y="92"  width="10" height="72" rx="5"/>
+  </g>
+
+  <!-- 播放三角（剪辑）：圆内右侧 -->
+  <path d="M132 96 L132 160 L188 128 Z" fill="#1A73E8"/>
+</svg>

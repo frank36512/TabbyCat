@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint-and-test:
+    runs-on: windows-latest
+    env:
+      QT_QPA_PLATFORM: offscreen
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python 3.12
+        run: uv python install 3.12
+
+      - name: Ensure FFmpeg is available
+        shell: pwsh
+        run: |
+          if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) {
+            choco install ffmpeg -y --no-progress
+          }
+          ffmpeg -version | Select-Object -First 1
+
+      - name: Sync dependencies
+        run: uv sync --all-extras
+
+      - name: Verify package metadata
+        run: uv run python -c "import taggycat; print(taggycat.APP_NAME, taggycat.APP_ID, taggycat.__version__)"
+
+      - name: Lint
+        run: uv run ruff check taggycat tests
+
+      - name: Test
+        run: uv run pytest tests -q

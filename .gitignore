@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+
+# uv（uv.lock 应提交以保证可复现）
+# uv.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 配置（含密钥）
+config.toml
+
+# 运行时产物
+workspace/
+output/
+cache/
+*.log
+
+# 测试与覆盖率
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 内部设计文档（含旧品牌名的历史记录，不随开源仓库分发）
+.trae/
+
+# 本地密钥与环境
+.env
+*.env
+*.local.toml
+
+# 可执行文件（dist/ 与 build/ 已在上方忽略，源码仓库不提交二进制）
+*.exe
+*.msi
+
+# 本地字体（可能有独立授权，不随仓库分发）
+resources/fonts/
+
+# WorkBuddy 本地工作区数据（不随开源仓库分发）
+.workbuddy/

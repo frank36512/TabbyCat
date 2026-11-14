@@ -1,0 +1,83 @@
+[project]
+name = "taggycat"
+version = "0.1.0"
+description = "虎猫解说 (taggycat) - 一站式 AI 影视解说 + 自动化剪辑系统"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "Apache-2.0" }
+authors = [{ name = "taggycat contributors" }]
+keywords = ["解说", "影视解说", "video", "ffmpeg", "pyqt6", "llm", "tts"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: X11 Applications :: Qt",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Video",
+]
+dependencies = [
+    "pydantic>=2.7.0",
+    "loguru>=0.7.2",
+    "requests>=2.32.0",
+    "pillow>=10.3.0",
+]
+
+[project.optional-dependencies]
+# LLM / VLM（云端 OpenAI 兼容 + 本地 Ollama 备选）
+llm = [
+    "openai>=1.40.0",
+]
+# 本地 ASR（faster-whisper，3090 CUDA）
+asr = [
+    "faster-whisper>=1.0.0",
+]
+# 在线 TTS 起步引擎
+tts = [
+    "edge-tts>=6.1.0",
+]
+# PyQt6 桌面界面
+ui = [
+    "pyqt6>=6.7.0",
+]
+all = [
+    "taggycat[llm,asr,tts,ui]",
+]
+
+[project.scripts]
+taggycat = "taggycat.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.5.0",
+    # 单文件 exe 打包（build_exe.bat / release workflow 使用）
+    "pyinstaller>=6.10.0",
+]
+
+[tool.uv]
+package = true
+
+[tool.setuptools.packages.find]
+include = ["taggycat*"]
+
+# 配置模板随包分发，保证安装后 `taggycat init` 可用
+[tool.setuptools.package-data]
+taggycat = ["config.example.toml"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "B", "UP", "SIM", "C4"]
+# UP042: str,Enum → StrEnum 会改变 str(member) 输出，本次不启用
+ignore = ["UP042"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"

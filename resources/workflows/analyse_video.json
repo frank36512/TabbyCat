@@ -1,0 +1,99 @@
+{
+  "14": {
+    "inputs": {
+      "video": "mv-59a3a36e-final.mp4",
+      "force_rate": 0,
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": 32,
+      "skip_first_frames": 0,
+      "select_every_nth": 1,
+      "format": "AnimateDiff"
+    },
+    "class_type": "VHS_LoadVideo",
+    "_meta": {
+      "title": "Load Video (Upload) 🎥🅥🅗🅢"
+    }
+  },
+  "18": {
+    "inputs": {
+      "text": "Actually, there is no continuous “video” here — these are two separate static images.\n\nHere’s a summary of each:\n\n---\n\n**Image 1: Elderly Woman Eating at Home**\n\n- **Setting**: A warm, modern kitchen-dining area with glass partitions.\n- **Subject**: An elderly woman with gray hair tied back, wearing traditional-style clothing (possibly a light-colored robe or hanfu-inspired attire).\n- **Action**: She sits calmly at a wooden dining table laden with an abundant spread of Chinese home-cooked dishes:\n    - Steamed fish garnished with green onions,\n    - Braised tofu cubes,\n    - Stir-fried vegetables,\n    - Shrimp dish,\n    - Meatballs,\n    - Bowls of rice and soup,\n    - And more.\n- **Mood/Theme**: The image evokes warmth, tradition, nourishment, family care, and contentment—perhaps symbolizing intergenerational connection through food or the simple joy of daily meals prepared lovingly by elders.\n\n---\n\n**Image 2: Young Woman Eating With Lime Wedge**\n\n- **Setting**: Modern indoor setting; blurred background suggests a stylish apartment or restaurant.\n- **Subject**: A young woman with long dark wavy hair, dressed elegantly in a white sleeveless top.\n- **Action**: She holds chopsticks delicately balancing a lime wedge over her mouth as if about to bite into it while looking directly toward the camera. In front of her is a bowl of plain steamed rice and small plates containing limes and possibly other fruits or snacks.\n- **Style/Mood**: Appears stylized for social media or lifestyle branding (“Ai生成”, meaning AI-generated). It conveys freshness, elegance, health-conscious eating, perhaps even tropical flair due to the lime accent.\n  \n---\n\n✅ Summary Narrative Points:\n\nThese two scenes contrast generations and aesthetics but share thematic elements around *food* and *eating*. One celebrates heritage, simplicity, and familial comfort; the other highlights contemporary beauty, personal indulgence, and visual appeal — both centered on shared human experiences surrounding mealtime.\n\nThere's no chronological story connecting them unless interpreted metaphorically—as representations of life stages, cultural continuity vs individual expression—or simply juxtaposed visuals showcasing different interpretations of \"enjoying food.\" \n\nThey do not form part of one coherent event-based sequence since they're presented side-by-side without transition cues typical of videos. If you’re viewing them sequentially via slideshows or editing software, consider framing your narration accordingly!\n\nLet me know if you’d like help turning either scene into script format! 🍚🍋",
+      "anything": [
+        "19",
+        0
+      ]
+    },
+    "class_type": "easy showAnything",
+    "_meta": {
+      "title": "展示任何"
+    }
+  },
+  "19": {
+    "inputs": {
+      "model_name": "Qwen3-VL-8B-Instruct",
+      "quantization": "None (FP16)",
+      "attention_mode": "auto",
+      "preset_prompt": "📹 Video Summary",
+      "custom_prompt": "",
+      "max_tokens": 1024,
+      "keep_model_loaded": true,
+      "seed": 677561297,
+      "video": [
+        "20",
+        0
+      ]
+    },
+    "class_type": "AILab_QwenVL",
+    "_meta": {
+      "title": "QwenVL"
+    }
+  },
+  "20": {
+    "inputs": {
+      "width": 1080,
+      "height": 1080,
+      "interpolation": "nearest",
+      "method": "keep proportion",
+      "condition": "downscale if bigger",
+      "multiple_of": 0,
+      "image": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "ImageResize+",
+    "_meta": {
+      "title": "🔧 Image Resize"
+    }
+  },
+  "21": {
+    "inputs": {
+      "offload_model": true,
+      "offload_cache": true,
+      "anything": [
+        "18",
+        0
+      ]
+    },
+    "class_type": "VRAMCleanup",
+    "_meta": {
+      "title": "🎈VRAM-Cleanup"
+    }
+  },
+  "22": {
+    "inputs": {
+      "clean_file_cache": true,
+      "clean_processes": true,
+      "clean_dlls": true,
+      "retry_times": 3,
+      "anything": [
+        "21",
+        0
+      ]
+    },
+    "class_type": "RAMCleanup",
+    "_meta": {
+      "title": "🎈RAM-Cleanup"
+    }
+  }
+}

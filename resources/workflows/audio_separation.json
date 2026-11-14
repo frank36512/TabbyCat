@@ -1,0 +1,92 @@
+{
+  "1": {
+    "inputs": {
+      "audio": "151.同桌的你 (风行版) - 老狼.mp3"
+    },
+    "class_type": "LoadAudio",
+    "_meta": {
+      "title": "加载音频"
+    }
+  },
+  "2": {
+    "inputs": {
+      "model_name": "MelBandRoformer_fp16.safetensors"
+    },
+    "class_type": "MelBandRoFormerModelLoader",
+    "_meta": {
+      "title": "Mel-Band RoFormer Model Loader"
+    }
+  },
+  "3": {
+    "inputs": {
+      "model": [
+        "2",
+        0
+      ],
+      "audio": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "MelBandRoFormerSampler",
+    "_meta": {
+      "title": "Mel-Band RoFormer Sampler"
+    }
+  },
+  "14": {
+    "inputs": {
+      "filename_prefix": "audio/ComfyUI",
+      "format": "flac",
+      "audio": [
+        "3",
+        0
+      ]
+    },
+    "class_type": "SaveAudioAdvanced",
+    "_meta": {
+      "title": "保存音频（高级）"
+    }
+  },
+  "15": {
+    "inputs": {
+      "filename_prefix": "audio/ComfyUI",
+      "format": "flac",
+      "audio": [
+        "3",
+        1
+      ]
+    },
+    "class_type": "SaveAudioAdvanced",
+    "_meta": {
+      "title": "保存音频（高级）"
+    }
+  },
+  "65": {
+    "inputs": {
+      "model_type": "large-v3",
+      "language": "zh",
+      "batch_size": 4,
+      "include_segments": true,
+      "audio": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "WhisperXWordTranscribe",
+    "_meta": {
+      "title": "WhisperX 逐词转写 (Word JSON/ASS)"
+    }
+  },
+  "66": {
+    "inputs": {
+      "source": [
+        "65",
+        0
+      ]
+    },
+    "class_type": "PreviewAny",
+    "_meta": {
+      "title": "预览任意"
+    }
+  }
+}

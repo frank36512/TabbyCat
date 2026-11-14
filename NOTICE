@@ -1,0 +1,19 @@
+虎猫解说 (taggycat)
+Copyright 2026 taggycat contributors
+
+本产品依据 Apache License 2.0 授权，完整条款见 LICENSE 文件。
+
+第三方与素材说明
+----------------
+1. 架构设计参考 NarratoAI（https://github.com/linyqh/NarratoAI，MIT 许可）。
+   本项目代码为独立实现，未复制其源码；流水线阶段的划分思路借鉴自该项目。
+2. 运行时依赖（PyQt6、Pydantic、Loguru、Requests、Pillow、openai、
+   faster-whisper、edge-tts、PyInstaller 等）各自遵循其上游许可；
+   本项目源码分发时不包含这些库的二进制文件。
+3. FFmpeg、ComfyUI、Ollama 等外部程序由使用者自行安装与配置，
+   其许可条款与本项目无关；生成的单文件 exe 不重新分发这些程序。
+4. 品牌图标 taggycat.png / taggycat.ico 及 resources/icons/ 下派生图为
+   本项目品牌素材。若该图由第三方设计或 AI 生成工具产出，请在发布前
+   在此补充说明作者、来源与授权情况，避免权利瑕疵。
+
+联系方式与漏洞报告流程见 SECURITY.md。

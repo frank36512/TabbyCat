@@ -1,0 +1,120 @@
+{
+  "5": {
+    "inputs": {
+      "image": "girl.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "$image.image"
+    }
+  },
+  "6": {
+    "inputs": {
+      "text": "A young woman with long, dark brown wavy hair cascading over her right shoulder gazes directly at the viewer with a neutral to slightly pensive expression, her lips softly parted and eyes accentuated by defined eyeliner. She wears a simple white spaghetti strap top featuring thin straps that converge into a V-neckline near her collarbone, complemented by small pearl-like stud earrings on both ears. Her posture is upright but relaxed as she sits or stands facing forward in front of a plain, muted gray backdrop which appears studio-lit and intentionally blurred behind her shoulders. The scene suggests an indoor setting like a photo shoot room or dressing area due to its controlled ambiance and lack of distracting environmental features. Lighting originates from the front-left side, casting even illumination across her face while creating gentle highlights along her cheekbones and forehead without harsh shadows — suggesting diffused artificial light typical for portrait photography. Shot from eye level using a medium close-up framing, the focus remains sharply concentrated on her upper body and face, subtly drawing attention to her direct gaze and elegant attire against the minimalist background.",
+      "anything": [
+        "10",
+        0
+      ]
+    },
+    "class_type": "easy showAnything",
+    "_meta": {
+      "title": "Show Any"
+    }
+  },
+  "7": {
+    "inputs": {
+      "model_name": "Qwen3-VL-8B-Instruct",
+      "quantization": "8-bit (Balanced)",
+      "attention_mode": "auto",
+      "preset_prompt": "🖼️ Detailed Description",
+      "custom_prompt": "",
+      "max_tokens": 512,
+      "keep_model_loaded": true,
+      "seed": 1733907685,
+      "image": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "AILab_QwenVL",
+    "_meta": {
+      "title": "QwenVL"
+    }
+  },
+  "8": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "width": 1080,
+      "height": 1080,
+      "crop": "disabled",
+      "image": [
+        "5",
+        0
+      ]
+    },
+    "class_type": "ImageScale",
+    "_meta": {
+      "title": "🔧 Image Resize"
+    }
+  },
+  "9": {
+    "inputs": {
+      "clean_file_cache": true,
+      "clean_processes": true,
+      "clean_dlls": true,
+      "retry_times": 3,
+      "anything": [
+        "7",
+        0
+      ]
+    },
+    "class_type": "RAMCleanup",
+    "_meta": {
+      "title": "🎈RAM-Cleanup"
+    }
+  },
+  "10": {
+    "inputs": {
+      "offload_model": true,
+      "offload_cache": true,
+      "anything": [
+        "9",
+        0
+      ]
+    },
+    "class_type": "VRAMCleanup",
+    "_meta": {
+      "title": "🎈VRAM-Cleanup"
+    }
+  },
+  "11": {
+    "inputs": {
+      "offload_model": true,
+      "offload_cache": true,
+      "anything": [
+        "6",
+        0
+      ]
+    },
+    "class_type": "VRAMCleanup",
+    "_meta": {
+      "title": "🎈VRAM-Cleanup"
+    }
+  },
+  "12": {
+    "inputs": {
+      "clean_file_cache": true,
+      "clean_processes": true,
+      "clean_dlls": true,
+      "retry_times": 3,
+      "anything": [
+        "11",
+        0
+      ]
+    },
+    "class_type": "RAMCleanup",
+    "_meta": {
+      "title": "🎈RAM-Cleanup"
+    }
+  }
+}
