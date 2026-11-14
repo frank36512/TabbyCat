@@ -15,6 +15,12 @@
 - 开源发布材料：Apache-2.0 `LICENSE`、`NOTICE`、`CONTRIBUTING.md`、`SECURITY.md`、Issue/PR 模板、GitHub Actions 的 CI 与 Release 工作流。
 - 示例配置脱敏：API Key 统一占位符、内网地址改为 `127.0.0.1`。
 
+### 修复
+
+- 打包冒烟测试发现并修复：windowed 单文件 exe（console=False）启动时 `sys.stderr` 为 `None`，
+  loguru 初始化即抛 `TypeError: Cannot log to objects of type 'NoneType'` 导致界面无法启动；
+  现控制台可用时打控制台，exe 场景自动落盘到 exe 同目录 `taggycat.log`。
+
 ### 变更
 
 - Python 包与 CLI 由 `clipnarra` 重命名为 `taggycat`；环境变量改为 `TAGGYCAT_CONFIG`（仍兼容旧的 `CLIPNARRA_CONFIG`，会提示弃用）。

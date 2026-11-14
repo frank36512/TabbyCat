@@ -14,12 +14,20 @@ from loguru import logger
 
 def _setup_logging(verbose: bool = False) -> None:
     logger.remove()
-    logger.add(
-        sys.stderr,
-        level="DEBUG" if verbose else "INFO",
-        format="<green>{time:HH:mm:ss}</green> | <level>{level:<7}</level> | {message}",
-        colorize=True,
-    )
+    level = "DEBUG" if verbose else "INFO"
+    fmt = "<green>{time:HH:mm:ss}</green> | <level>{level:<7}</level> | {message}"
+    # windowed exe（console=False）下 sys.stderr 为 None，loguru 无法写 None sink：
+    # 控制台可用时打控制台；否则落盘到 exe 同目录 / CWD 的 taggycat.log，
+    # 保证 GUI 启动失败时仍有日志可查。
+    sink = sys.stderr if sys.stderr is not None else getattr(sys, "__stderr__", None)
+    if sink is None:
+        if getattr(sys, "frozen", False):
+            base = Path(sys.executable).resolve().parent
+        else:
+            base = Path.cwd()
+        logger.add(base / "taggycat.log", level=level, format=fmt, encoding="utf-8")
+    else:
+        logger.add(sink, level=level, format=fmt, colorize=True)
 
 
 def _load_config(args):
